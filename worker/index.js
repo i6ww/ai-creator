@@ -17,40 +17,46 @@ async function handleRequest(request) {
     });
   }
   
-  // 只处理POST请求
-  if (request.method !== 'POST') {
-    return new Response('Method not allowed', { status: 405 });
-  }
-  
-  // 构建目标URL
-  const targetUrl = `https://grok2api-xings-projects-3a939220.vercel.app${path}`;
-  
-  // 克隆请求
-  const clonedRequest = new Request(targetUrl, {
-    method: request.method,
-    headers: new Headers(request.headers),
-    body: request.body
-  });
-  
-  // 添加API密钥
-  clonedRequest.headers.set('Authorization', 'Bearer 123456');
-  
-  try {
-    // 发送请求到目标API
-    const response = await fetch(clonedRequest);
+  // 检查是否是API请求（以/v1开头的路径）
+  if (path.startsWith('/v1/')) {
+    // 只处理POST请求
+    if (request.method !== 'POST') {
+      return new Response('Method not allowed', { status: 405 });
+    }
     
-    // 克隆响应
-    const clonedResponse = new Response(response.body, {
-      status: response.status,
-      statusText: response.statusText,
-      headers: new Headers(response.headers)
+    // 构建目标URL
+    const targetUrl = `https://grok2api-xings-projects-3a939220.vercel.app${path}`;
+    
+    // 克隆请求
+    const clonedRequest = new Request(targetUrl, {
+      method: request.method,
+      headers: new Headers(request.headers),
+      body: request.body
     });
     
-    // 添加CORS响应头
-    clonedResponse.headers.set('Access-Control-Allow-Origin', '*');
+    // 添加API密钥
+    clonedRequest.headers.set('Authorization', 'Bearer 123456');
     
-    return clonedResponse;
-  } catch (error) {
-    return new Response('Internal server error', { status: 500 });
+    try {
+      // 发送请求到目标API
+      const response = await fetch(clonedRequest);
+      
+      // 克隆响应
+      const clonedResponse = new Response(response.body, {
+        status: response.status,
+        statusText: response.statusText,
+        headers: new Headers(response.headers)
+      });
+      
+      // 添加CORS响应头
+      clonedResponse.headers.set('Access-Control-Allow-Origin', '*');
+      
+      return clonedResponse;
+    } catch (error) {
+      return new Response('Internal server error', { status: 500 });
+    }
+  } else {
+    // 非API请求，返回首页或其他内容
+    return new Response('Welcome to AI Creator API', { status: 200 });
   }
 }
