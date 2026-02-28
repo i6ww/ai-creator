@@ -5,101 +5,193 @@ import ImageGenerator from './components/ImageGenerator.vue';
 import VideoGenerator from './components/VideoGenerator.vue';
 
 const activeTab = ref('chat');
+
+const tabs = [
+  { id: 'chat', label: '聊天对话', icon: '💬' },
+  { id: 'image', label: '图像生成', icon: '🎨' },
+  { id: 'video', label: '视频生成', icon: '🎬' }
+];
 </script>
 
 <template>
-  <div class="app-container">
+  <div class="app-wrapper">
     <header class="app-header">
-      <h1>AI创作平台</h1>
+      <div class="header-content">
+        <div class="logo">
+          <span class="logo-icon">✨</span>
+          <h1 class="gradient-text">秃头邢AI创作平台</h1>
+        </div>
+        <p class="header-subtitle">基于 Grok2API 的智能创作助手</p>
+      </div>
     </header>
     
     <nav class="app-nav">
-      <button 
-        :class="{ active: activeTab === 'chat' }" 
-        @click="activeTab = 'chat'"
-      >
-        聊天对话
-      </button>
-      <button 
-        :class="{ active: activeTab === 'image' }" 
-        @click="activeTab = 'image'"
-      >
-        图像生成
-      </button>
-      <button 
-        :class="{ active: activeTab === 'video' }" 
-        @click="activeTab = 'video'"
-      >
-        视频生成
-      </button>
+      <div class="nav-container">
+        <button 
+          v-for="tab in tabs"
+          :key="tab.id"
+          :class="['nav-btn', { active: activeTab === tab.id }]"
+          @click="activeTab = tab.id"
+        >
+          <span class="nav-icon">{{ tab.icon }}</span>
+          <span class="nav-label">{{ tab.label }}</span>
+        </button>
+      </div>
     </nav>
     
     <main class="app-content">
-      <ChatComponent v-if="activeTab === 'chat'" />
-      <ImageGenerator v-else-if="activeTab === 'image'" />
-      <VideoGenerator v-else-if="activeTab === 'video'" />
+      <div class="content-wrapper">
+        <Transition name="fade" mode="out-in">
+          <ChatComponent v-if="activeTab === 'chat'" key="chat" />
+          <ImageGenerator v-else-if="activeTab === 'image'" key="image" />
+          <VideoGenerator v-else-if="activeTab === 'video'" key="video" />
+        </Transition>
+      </div>
     </main>
+    
+    <footer class="app-footer">
+      <p>Powered by Grok2API & Vue 3</p>
+    </footer>
   </div>
 </template>
 
-<style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  font-family: Arial, sans-serif;
-  background-color: #f5f5f5;
-}
-
-.app-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
+<style scoped>
+.app-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .app-header {
+  padding: 40px 20px 30px;
   text-align: center;
-  margin-bottom: 30px;
 }
 
-.app-header h1 {
-  color: #333;
+.header-content {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.logo-icon {
   font-size: 2.5em;
+  animation: float 3s ease-in-out infinite;
+}
+
+.logo h1 {
+  font-size: 2.8em;
+  font-weight: 700;
+  letter-spacing: -1px;
+}
+
+.header-subtitle {
+  color: var(--text-secondary);
+  font-size: 1.1em;
+  font-weight: 400;
 }
 
 .app-nav {
+  padding: 0 20px 30px;
+}
+
+.nav-container {
   display: flex;
   justify-content: center;
-  gap: 20px;
-  margin-bottom: 30px;
+  gap: 12px;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 6px;
+  background: var(--card-bg);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-lg);
 }
 
-.app-nav button {
-  padding: 10px 20px;
+.nav-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
   border: none;
-  border-radius: 5px;
-  background-color: #e0e0e0;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 15px;
+  font-weight: 500;
   cursor: pointer;
-  font-size: 16px;
-  transition: all 0.3s ease;
+  transition: var(--transition);
+  flex: 1;
+  justify-content: center;
 }
 
-.app-nav button:hover {
-  background-color: #d0d0d0;
+.nav-btn:hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.05);
 }
 
-.app-nav button.active {
-  background-color: #4CAF50;
+.nav-btn.active {
+  background: var(--primary-gradient);
   color: white;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.nav-icon {
+  font-size: 1.2em;
 }
 
 .app-content {
-  background-color: white;
-  border-radius: 10px;
-  padding: 30px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  flex: 1;
+  padding: 0 20px 40px;
+}
+
+.content-wrapper {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.app-footer {
+  padding: 20px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 14px;
+  border-top: 1px solid var(--card-border);
+}
+
+/* Transition animations */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.fade-enter-from {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.fade-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .logo h1 {
+    font-size: 2em;
+  }
+  
+  .nav-container {
+    flex-direction: column;
+  }
+  
+  .nav-btn {
+    width: 100%;
+  }
 }
 </style>

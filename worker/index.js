@@ -33,7 +33,7 @@ async function handleRequest(request) {
   });
   
   // 添加API密钥（这里需要替换为实际的API密钥）
-  clonedRequest.headers.set('Authorization', 'Bearer your-api-key');
+  clonedRequest.headers.set('Authorization', 'admin');
   
   try {
     // 发送请求到目标API
