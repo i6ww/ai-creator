@@ -1,13 +1,15 @@
-# AI创作平台
+# 秃头邢AI创作平台
 
-基于Vue 3和Cloudflare Pages开发的AI创作平台，集成Grok2API，支持聊天对话、图像生成和视频生成功能。
+基于Vue 3和Cloudflare Pages开发的AI创作平台，集成Grok2API，支持聊天对话、图像生成和视频生成功能，包含用户认证和历史记录系统。
 
 ## 功能特性
 
 - **聊天对话**：支持与AI进行文字对话，使用grok-4模型
 - **图像生成**：支持通过提示词生成高质量图像，使用grok-imagine-1.0模型
 - **视频生成**：支持通过提示词生成视频，使用grok-imagine-1.0-video模型
-- **响应式设计**：适配不同屏幕尺寸
+- **用户认证**：支持用户名密码登录/注册，本地存储用户信息
+- **历史记录**：自动保存用户生成的内容，支持按类型筛选和管理
+- **响应式设计**：适配不同屏幕尺寸，支持移动设备
 - **Cloudflare部署**：基于Cloudflare Pages和Workers部署，提供高可用性
 
 ## 技术栈
@@ -15,6 +17,7 @@
 - **前端**：Vue 3 + Vite + Axios
 - **后端**：Cloudflare Workers（API代理）
 - **API**：Grok2API
+- **存储**：LocalStorage（用户信息和历史记录）
 
 ## 安装部署
 
@@ -76,11 +79,17 @@ npm run build
 
 ## 使用说明
 
-1. 访问部署后的Cloudflare Pages站点
-2. 在导航栏选择需要使用的功能：
-   - **聊天对话**：输入消息与AI进行对话
-   - **图像生成**：输入提示词生成图像
-   - **视频生成**：输入提示词并配置参数生成视频
+### 1. 访问部署后的Cloudflare Pages站点
+
+### 2. 用户认证
+- 点击右上角用户图标进行登录/注册
+- 测试账号：`testuser`，密码：`test123`
+
+### 3. 功能使用
+- **聊天对话**：输入消息与AI进行对话，支持多种模型选择
+- **图像生成**：输入提示词生成图像，支持多种尺寸和风格
+- **视频生成**：输入提示词并配置参数生成视频
+- **历史记录**：查看和管理之前生成的内容
 
 ## 项目结构
 
@@ -88,17 +97,24 @@ npm run build
 ai-creator/
 ├── src/
 │   ├── components/
-│   │   ├── ChatComponent.vue      # 聊天对话组件
-│   │   ├── ImageGenerator.vue     # 图像生成组件
-│   │   └── VideoGenerator.vue     # 视频生成组件
-│   ├── api.js                     # API调用封装
-│   ├── App.vue                    # 主应用组件
-│   └── main.js                    # 应用入口
+│   │   ├── AuthModal.vue        # 登录/注册弹窗
+│   │   ├── ChatComponent.vue     # 聊天对话组件
+│   │   ├── HistoryPanel.vue      # 历史记录面板
+│   │   ├── ImageGenerator.vue    # 图像生成组件
+│   │   ├── UserMenu.vue          # 用户菜单
+│   │   └── VideoGenerator.vue    # 视频生成组件
+│   ├── utils/
+│   │   └── auth.js               # 认证工具函数
+│   ├── api.js                    # API调用封装
+│   ├── App.vue                   # 主应用组件
+│   └── main.js                   # 应用入口
 ├── worker/
-│   ├── index.js                   # Cloudflare Worker代码
-│   └── wrangler.toml              # Worker配置文件
-├── package.json                   # 项目依赖
-└── vite.config.js                 # Vite配置
+│   ├── index.js                  # Cloudflare Worker代码
+│   └── wrangler.toml             # Worker配置文件
+├── setup-test-account.html       # 测试账号设置工具
+├── test-account.js               # 测试账号脚本
+├── package.json                  # 项目依赖
+└── vite.config.js                # Vite配置
 ```
 
 ## 注意事项
@@ -106,6 +122,7 @@ ai-creator/
 - 请确保您的Grok2API密钥有效
 - 视频生成可能需要较长时间，请耐心等待
 - 部署前请确保修改所有必要的配置参数
+- 用户信息和历史记录存储在浏览器LocalStorage中
 
 ## 许可证
 
