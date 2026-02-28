@@ -1,8 +1,8 @@
 import axios from 'axios';
 
-// 开发环境使用代理，生产环境使用实际API地址
+// 开发环境使用代理，生产环境使用Cloudflare Worker作为代理
 const isDev = import.meta.env.DEV;
-const API_BASE_URL = isDev ? '' : 'https://grok2api-xings-projects-3a939220.vercel.app';
+const API_BASE_URL = isDev ? '' : 'https://xycm.site';
 const API_KEY = '123456'; // API密钥
 
 const api = axios.create({

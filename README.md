@@ -53,11 +53,13 @@ clonedRequest.headers.set('Authorization', 'Bearer your-api-key');
 
 ### 5. 更新API配置
 
-修改`src/api.js`文件中的Worker URL：
+修改`src/api.js`文件中的Worker URL（已配置为Cloudflare Worker代理）：
 
 ```javascript
-const API_BASE_URL = 'https://your-worker-name.your-account.workers.dev'; // 这里需要替换为实际的Worker URL
+const API_BASE_URL = 'https://xycm.site'; // Cloudflare Worker代理地址
 ```
+
+**注意**：使用Cloudflare Worker作为API代理，可以解决Vercel API在某些地区无法访问的问题。前端(Cloudflare Pages) → Cloudflare Worker → Vercel API(Grok2API)
 
 ### 6. 构建项目
 
