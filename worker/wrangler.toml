@@ -1,0 +1,7 @@
+name = "ai-creator-proxy"
+main = "index.js"
+compatibility_date = "2024-01-01"
+
+[[r2_buckets]]
+name = "my-bucket"
+bucket_name = "my-bucket"
