@@ -7,14 +7,13 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://grok2api-xings-projects-3a939220.vercel.app',
+        target: 'https://xycm.site',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '')
       },
-      '/v1/files': {
-        target: 'https://grok2api-xings-projects-3a939220.vercel.app',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/v1\/files/, '/v1/files')
+      '/v1': {
+        target: 'https://xycm.site',
+        changeOrigin: true
       }
     }
   }
