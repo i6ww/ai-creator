@@ -1,6 +1,10 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, inject } from 'vue';
 import { generateVideo as apiGenerateVideo } from '../api';
+import { generateHistory } from '../utils/auth';
+
+const user = inject('user');
+const openAuth = inject('openAuth');
 
 const prompt = ref('');
 const videoUrl = ref('');
@@ -30,6 +34,11 @@ const resolutions = [
 
 const generateVideo = async () => {
   if (!prompt.value.trim()) return;
+
+  if (!user.value) {
+    openAuth();
+    return;
+  }
 
   isLoading.value = true;
   videoUrl.value = '';
@@ -78,6 +87,12 @@ const generateVideo = async () => {
     
     // 将Vercel API地址替换为相对路径，以便通过代理访问
     videoUrl.value = content.replace(/https:\/\/grok2api-xings-projects-3a939220\.vercel\.app/g, '');
+    
+    generateHistory.add({
+      type: 'video',
+      prompt: prompt.value,
+      url: videoUrl.value
+    });
   } catch (err) {
     console.error('视频生成失败:', err);
     error.value = '视频生成失败，请稍后重试。';

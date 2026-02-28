@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>设置测试账号</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 400px;
+            width: 100%;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+        h1 {
+            margin-bottom: 30px;
+            font-size: 24px;
+        }
+        .account-info {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+        .account-info p {
+            margin: 8px 0;
+            font-size: 16px;
+        }
+        .btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            color: white;
+            padding: 12px 24px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 5px;
+        }
+        .btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+        }
+        .message {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            display: none;
+        }
+        .message.success {
+            background: rgba(72, 187, 120, 0.2);
+            border: 1px solid rgba(72, 187, 120, 0.3);
+            display: block;
+        }
+        .message.error {
+            background: rgba(255, 107, 107, 0.2);
+            border: 1px solid rgba(255, 107, 107, 0.3);
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>设置测试账号</h1>
+        <div class="account-info">
+            <h3>测试账号信息：</h3>
+            <p><strong>用户名：</strong> testuser</p>
+            <p><strong>邮箱：</strong> test@example.com</p>
+            <p><strong>密码：</strong> 任意密码（系统不验证密码）</p>
+        </div>
+        <button class="btn btn-primary" onclick="setTestAccount()">设置测试账号</button>
+        <button class="btn" onclick="clearAccount()">清除账号</button>
+        <button class="btn" onclick="checkAccount()">检查账号状态</button>
+        <div id="message" class="message"></div>
+    </div>
+
+    <script>
+        function showMessage(text, isSuccess) {
+            const message = document.getElementById('message');
+            message.textContent = text;
+            message.className = `message ${isSuccess ? 'success' : 'error'}`;
+        }
+
+        function setTestAccount() {
+            const testUser = {
+                id: 1234567890,
+                username: 'testuser',
+                email: 'test@example.com',
+                avatar: 'T'
+            };
+            
+            try {
+                localStorage.setItem('user', JSON.stringify(testUser));
+                showMessage('测试账号已成功设置！', true);
+                console.log('测试账号已设置:', testUser);
+            } catch (error) {
+                showMessage('设置账号失败：' + error.message, false);
+                console.error('设置账号失败:', error);
+            }
+        }
+
+        function clearAccount() {
+            try {
+                localStorage.removeItem('user');
+                showMessage('账号已清除！', true);
+                console.log('账号已清除');
+            } catch (error) {
+                showMessage('清除账号失败：' + error.message, false);
+                console.error('清除账号失败:', error);
+            }
+        }
+
+        function checkAccount() {
+            try {
+                const userStr = localStorage.getItem('user');
+                if (userStr) {
+                    const user = JSON.parse(userStr);
+                    showMessage('当前账号：' + user.username, true);
+                    console.log('当前账号:', user);
+                } else {
+                    showMessage('未设置账号', false);
+                    console.log('未设置账号');
+                }
+            } catch (error) {
+                showMessage('检查账号失败：' + error.message, false);
+                console.error('检查账号失败:', error);
+            }
+        }
+
+        // 页面加载时检查账号状态
+        window.onload = checkAccount;
+    </script>
+</body>
+</html>

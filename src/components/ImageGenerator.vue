@@ -1,6 +1,10 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, inject } from 'vue';
 import { generateImage as apiGenerateImage } from '../api';
+import { generateHistory } from '../utils/auth';
+
+const user = inject('user');
+const openAuth = inject('openAuth');
 
 const prompt = ref('');
 const imageUrl = ref('');
@@ -9,6 +13,11 @@ const error = ref('');
 
 const generateImage = async () => {
   if (!prompt.value.trim()) return;
+  
+  if (!user.value) {
+    openAuth();
+    return;
+  }
   
   isLoading.value = true;
   imageUrl.value = '';
@@ -47,6 +56,12 @@ const generateImage = async () => {
     } else {
       throw new Error('无法解析图像URL');
     }
+    
+    generateHistory.add({
+      type: 'image',
+      prompt: prompt.value,
+      url: imageUrl.value
+    });
   } catch (err) {
     console.error('图像生成失败:', err);
     error.value = '图像生成失败，请稍后重试。';

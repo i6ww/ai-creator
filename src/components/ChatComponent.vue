@@ -1,6 +1,10 @@
 <script setup>
-import { ref, nextTick } from 'vue';
+import { ref, nextTick, inject } from 'vue';
 import { chatCompletion } from '../api';
+import { generateHistory } from '../utils/auth';
+
+const user = inject('user');
+const openAuth = inject('openAuth');
 
 const messages = ref([
   { role: 'assistant', content: '你好！我是AI助手，有什么可以帮助你的吗？' }
@@ -32,6 +36,11 @@ const scrollToBottom = async () => {
 const sendMessage = async () => {
   if (!inputMessage.value.trim() || isLoading.value) return;
   
+  if (!user.value) {
+    openAuth();
+    return;
+  }
+  
   messages.value.push({ role: 'user', content: inputMessage.value });
   const userMessage = inputMessage.value;
   inputMessage.value = '';
@@ -41,9 +50,17 @@ const sendMessage = async () => {
   
   try {
     const response = await chatCompletion(messages.value, selectedModel.value, false);
+    const assistantMessage = response.choices[0].message.content;
     messages.value.push({
       role: 'assistant',
-      content: response.choices[0].message.content
+      content: assistantMessage
+    });
+    
+    generateHistory.add({
+      type: 'chat',
+      prompt: userMessage,
+      response: assistantMessage,
+      model: selectedModel.value
     });
   } catch (error) {
     console.error('API调用失败:', error);

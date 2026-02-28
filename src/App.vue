@@ -1,16 +1,42 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted, provide } from 'vue';
 import ChatComponent from './components/ChatComponent.vue';
 import ImageGenerator from './components/ImageGenerator.vue';
 import VideoGenerator from './components/VideoGenerator.vue';
+import UserMenu from './components/UserMenu.vue';
+import AuthModal from './components/AuthModal.vue';
+import HistoryPanel from './components/HistoryPanel.vue';
+import { getUser, isLoggedIn } from './utils/auth';
 
 const activeTab = ref('chat');
+const user = ref(null);
+const showAuthModal = ref(false);
+const showHistory = ref(false);
 
 const tabs = [
   { id: 'chat', label: '聊天对话', icon: '💬' },
   { id: 'image', label: '图像生成', icon: '🎨' },
   { id: 'video', label: '视频生成', icon: '🎬' }
 ];
+
+onMounted(() => {
+  user.value = getUser();
+});
+
+const handleLogin = (userData) => {
+  user.value = userData;
+};
+
+const handleOpenAuth = () => {
+  showAuthModal.value = true;
+};
+
+const handleOpenHistory = () => {
+  showHistory.value = true;
+};
+
+provide('user', user);
+provide('openAuth', handleOpenAuth);
 </script>
 
 <template>
@@ -23,6 +49,7 @@ const tabs = [
         </div>
         <p class="header-subtitle">基于 Grok2API 的智能创作助手</p>
       </div>
+      <UserMenu class="user-menu" @login="handleLogin" @openAuth="handleOpenAuth" @openHistory="handleOpenHistory" />
     </header>
     
     <nav class="app-nav">
@@ -52,6 +79,9 @@ const tabs = [
     <footer class="app-footer">
       <p>Powered by Grok2API & Vue 3</p>
     </footer>
+    
+    <AuthModal v-model:isOpen="showAuthModal" @login="handleLogin" />
+    <HistoryPanel v-model:isOpen="showHistory" />
   </div>
 </template>
 
@@ -65,11 +95,19 @@ const tabs = [
 .app-header {
   padding: 40px 20px 30px;
   text-align: center;
+  position: relative;
 }
 
 .header-content {
   max-width: 600px;
   margin: 0 auto;
+}
+
+.user-menu {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 100;
 }
 
 .logo {
