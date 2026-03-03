@@ -7,13 +7,14 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://xycm.site',
+        target: 'https://www.371181668.xyz',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '')
       },
-      '/v1': {
-        target: 'https://xycm.site',
-        changeOrigin: true
+      '/v1/files': {
+        target: 'https://www.371181668.xyz',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/v1\/files/, '/v1/files')
       }
     }
   }

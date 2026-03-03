@@ -1,9 +1,9 @@
 import axios from 'axios';
 
-// 开发环境使用代理，生产环境使用Cloudflare Worker作为代理
+// 开发环境使用代理，生产环境使用实际API地址
 const isDev = import.meta.env.DEV;
-const API_BASE_URL = isDev ? '' : 'https://xycm.site';
-const API_KEY = '123456'; // API密钥
+const API_BASE_URL = isDev ? '' : 'https://www.371181668.xyz';
+const API_KEY = 'admin'; // API密钥
 
 const api = axios.create({
   baseURL: API_BASE_URL,

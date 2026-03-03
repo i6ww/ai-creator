@@ -86,7 +86,7 @@ const generateVideo = async () => {
     }
     
     // 将Vercel API地址替换为相对路径，以便通过代理访问
-    videoUrl.value = content.replace(/https:\/\/grok2api-xings-projects-3a939220\.vercel\.app/g, '');
+    videoUrl.value = content.replace(/https:\/\/www\.371181668\.xyz/g, '');
     
     generateHistory.add({
       type: 'video',
