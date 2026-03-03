@@ -39,20 +39,20 @@ const generateImage = async () => {
       // 检查是否有URL
       else if (imageData.url) {
         console.log('使用URL格式:', imageData.url);
-        imageUrl.value = imageData.url;
+        imageUrl.value = imageData.url.replace(/https:\/\/grok2api-xings-projects-3a939220\.vercel\.app/g, '');
       } 
       else {
         throw new Error('无法解析图像数据');
       }
     } else if (response.choices && response.choices[0] && response.choices[0].message && response.choices[0].message.content) {
       console.log('使用聊天格式:', response.choices[0].message.content);
-      imageUrl.value = response.choices[0].message.content;
+      imageUrl.value = response.choices[0].message.content.replace(/https:\/\/grok2api-xings-projects-3a939220\.vercel\.app/g, '');
     } else if (response.url) {
       console.log('使用直接URL格式:', response.url);
-      imageUrl.value = response.url;
+      imageUrl.value = response.url.replace(/https:\/\/grok2api-xings-projects-3a939220\.vercel\.app/g, '');
     } else if (typeof response === 'string') {
       console.log('使用字符串格式:', response);
-      imageUrl.value = response;
+      imageUrl.value = response.replace(/https:\/\/grok2api-xings-projects-3a939220\.vercel\.app/g, '');
     } else {
       throw new Error('无法解析图像URL');
     }
