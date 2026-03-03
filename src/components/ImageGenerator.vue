@@ -120,75 +120,103 @@ const downloadImage = () => {
         :disabled="isLoading || !prompt.trim()"
         class="generate-btn"
       >
-        <span v-if="isLoading" class="spinner"></span>
-        <span v-else>✨ 生成图像</span>
+        <span v-if="isLoading" class="btn-content">
+          <span class="spinner"></span>
+          创作中...
+        </span>
+        <span v-else class="btn-content">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+          </svg>
+          开始创作
+        </span>
       </button>
-      
+    </div>
+    
+    <Transition name="fade">
       <div v-if="imageUrl || error" class="result-section">
+        <div class="result-header">
+          <h4>{{ error ? '生成失败' : '创作完成' }}</h4>
+          <button @click="clearResult" class="clear-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 6L6 18M6 6l12 12"/>
+            </svg>
+          </button>
+        </div>
+        
         <div v-if="error" class="error-message">
+          <span class="error-icon">⚠️</span>
           {{ error }}
         </div>
+        
         <div v-else class="image-result">
           <div class="image-container">
             <img :src="imageUrl" alt="生成的图像" />
             <div class="image-overlay">
-              <a :href="imageUrl" target="_blank" class="overlay-btn">
-                🔍 查看原图
-              </a>
-              <button @click="downloadImage" class="overlay-btn">
-                ⬇️ 下载图片
-              </button>
+              <div class="overlay-buttons">
+                <a :href="imageUrl" target="_blank" class="overlay-btn">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    <path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                  </svg>
+                  查看原图
+                </a>
+                <button @click="downloadImage" class="overlay-btn download-btn">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+                    <polyline points="7 10 12 15 17 10"/>
+                    <line x1="12" y1="15" x2="12" y2="3"/>
+                  </svg>
+                  下载图片
+                </button>
+              </div>
             </div>
           </div>
         </div>
-        <button @click="clearResult" class="clear-btn">
-          🗑️ 清除结果
-        </button>
       </div>
-    </div>
+    </Transition>
   </div>
 </template>
 
 <style scoped>
 .generator-wrapper {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  border-radius: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: var(--card-bg);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-lg);
   overflow: hidden;
+  box-shadow: var(--shadow-card);
 }
 
 .generator-header {
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.3) 0%, rgba(139, 92, 246, 0.3) 100%);
-  padding: 24px;
   display: flex;
   align-items: center;
   gap: 16px;
+  padding: 24px;
+  background: rgba(255, 255, 255, 0.03);
+  border-bottom: 1px solid var(--card-border);
 }
 
 .header-icon {
-  font-size: 32px;
-  background: rgba(255, 255, 255, 0.2);
+  font-size: 2.5em;
   width: 56px;
   height: 56px;
-  border-radius: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
-  backdrop-filter: blur(10px);
+  background: var(--secondary-gradient);
+  border-radius: var(--radius-md);
 }
 
 .header-info h3 {
-  margin: 0;
-  font-size: 1.4rem;
+  font-size: 1.3em;
   font-weight: 600;
-  color: white;
+  margin-bottom: 4px;
 }
 
 .header-info p {
-  margin: 4px 0 0 0;
-  font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--text-muted);
+  font-size: 14px;
 }
 
 .generator-body {
@@ -203,122 +231,164 @@ const downloadImage = () => {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 1rem;
+  font-size: 14px;
   font-weight: 500;
-  color: white;
-  margin-bottom: 12px;
+  color: var(--text-secondary);
+  margin-bottom: 10px;
 }
 
 .label-icon {
-  font-size: 1.2rem;
+  font-size: 1.2em;
 }
 
 .prompt-input {
   width: 100%;
-  padding: 16px;
-  border: 2px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  background: rgba(0, 0, 0, 0.2);
-  color: white;
-  font-size: 1rem;
+  padding: 16px 20px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: 15px;
   line-height: 1.6;
   resize: vertical;
-  transition: all 0.3s ease;
+  min-height: 120px;
+  transition: var(--transition);
+  font-family: inherit;
 }
 
 .prompt-input:focus {
   outline: none;
-  border-color: rgba(99, 102, 241, 0.5);
-  background: rgba(0, 0, 0, 0.3);
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
 }
 
 .prompt-input::placeholder {
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--text-muted);
 }
 
-.prompt-tips {
-  margin-top: 8px;
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-.tip {
-  font-size: 0.85rem;
-  color: rgba(255, 255, 255, 0.6);
-  background: rgba(255, 255, 255, 0.05);
-  padding: 6px 12px;
-  border-radius: 20px;
-}
-
-.generate-btn {
-  width: 100%;
-  padding: 16px 32px;
-  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-  color: white;
-  border: none;
-  border-radius: 12px;
-  font-size: 1.1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
-}
-
-.generate-btn:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
-}
-
-.generate-btn:disabled {
+.prompt-input:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
 
+.prompt-tips {
+  margin-top: 10px;
+}
+
+.tip {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.generate-btn {
+  width: 100%;
+  padding: 16px 24px;
+  background: var(--secondary-gradient);
+  border: none;
+  border-radius: var(--radius-md);
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  box-shadow: 0 4px 15px rgba(240, 147, 251, 0.4);
+}
+
+.generate-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(240, 147, 251, 0.6);
+}
+
+.generate-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
 .spinner {
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   border: 2px solid rgba(255, 255, 255, 0.3);
   border-top-color: white;
   border-radius: 50%;
-  animation: spin 1s linear infinite;
+  animation: spin 0.8s linear infinite;
 }
 
 @keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
+  to { transform: rotate(360deg); }
 }
 
 .result-section {
-  margin-top: 24px;
-  padding-top: 24px;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  margin: 0 24px 24px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-md);
+  animation: fadeIn 0.4s ease;
+}
+
+.result-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.result-header h4 {
+  font-size: 1em;
+  font-weight: 600;
+}
+
+.clear-btn {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.clear-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: var(--text-primary);
 }
 
 .error-message {
-  background: rgba(239, 68, 68, 0.2);
-  border: 1px solid rgba(239, 68, 68, 0.3);
-  color: #fecaca;
+  display: flex;
+  align-items: center;
+  gap: 10px;
   padding: 16px;
-  border-radius: 12px;
-  text-align: center;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: var(--radius-md);
+  color: #ef4444;
+}
+
+.error-icon {
+  font-size: 1.2em;
 }
 
 .image-result {
-  margin-bottom: 16px;
+  border-radius: var(--radius-md);
+  overflow: hidden;
 }
 
 .image-container {
   position: relative;
-  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: var(--radius-md);
   overflow: hidden;
-  background: rgba(0, 0, 0, 0.2);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
 .image-container img {
@@ -334,15 +404,11 @@ const downloadImage = () => {
 
 .image-overlay {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.7);
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
   opacity: 0;
   transition: opacity 0.3s ease;
 }
@@ -351,37 +417,60 @@ const downloadImage = () => {
   opacity: 1;
 }
 
+.overlay-buttons {
+  display: flex;
+  gap: 12px;
+}
+
 .overlay-btn {
-  padding: 10px 20px;
-  background: rgba(255, 255, 255, 0.2);
-  color: white;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background: white;
+  border: none;
+  border-radius: var(--radius-md);
+  color: #333;
+  font-weight: 500;
+  font-size: 14px;
   text-decoration: none;
-  font-size: 0.9rem;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .overlay-btn:hover {
-  background: rgba(255, 255, 255, 0.3);
-  transform: translateY(-2px);
+  transform: scale(1.05);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
-.clear-btn {
-  width: 100%;
-  padding: 12px 24px;
-  background: rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.8);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 10px;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.clear-btn:hover {
-  background: rgba(255, 255, 255, 0.15);
+.download-btn {
+  background: var(--secondary-gradient);
   color: white;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .generator-header {
+    padding: 20px;
+  }
+  
+  .generator-body {
+    padding: 20px;
+  }
+  
+  .result-section {
+    margin: 0 20px 20px;
+  }
 }
 </style>
