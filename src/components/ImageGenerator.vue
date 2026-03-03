@@ -39,20 +39,20 @@ const generateImage = async () => {
       // 检查是否有URL
       else if (imageData.url) {
         console.log('使用URL格式:', imageData.url);
-        imageUrl.value = imageData.url.replace(/https:\/\/grok2api-xings-projects-3a939220\.vercel\.app/g, '');
+        imageUrl.value = imageData.url.replace(/https:\/\/grok2api-xings-projects-3a939220\.vercel\.app/g, 'https://www.371181668.xyz');
       } 
       else {
         throw new Error('无法解析图像数据');
       }
     } else if (response.choices && response.choices[0] && response.choices[0].message && response.choices[0].message.content) {
       console.log('使用聊天格式:', response.choices[0].message.content);
-      imageUrl.value = response.choices[0].message.content.replace(/https:\/\/grok2api-xings-projects-3a939220\.vercel\.app/g, '');
+      imageUrl.value = response.choices[0].message.content.replace(/https:\/\/grok2api-xings-projects-3a939220\.vercel\.app/g, 'https://www.371181668.xyz');
     } else if (response.url) {
       console.log('使用直接URL格式:', response.url);
-      imageUrl.value = response.url.replace(/https:\/\/grok2api-xings-projects-3a939220\.vercel\.app/g, '');
+      imageUrl.value = response.url.replace(/https:\/\/grok2api-xings-projects-3a939220\.vercel\.app/g, 'https://www.371181668.xyz');
     } else if (typeof response === 'string') {
       console.log('使用字符串格式:', response);
-      imageUrl.value = response.replace(/https:\/\/grok2api-xings-projects-3a939220\.vercel\.app/g, '');
+      imageUrl.value = response.replace(/https:\/\/grok2api-xings-projects-3a939220\.vercel\.app/g, 'https://www.371181668.xyz');
     } else {
       throw new Error('无法解析图像URL');
     }
@@ -120,103 +120,75 @@ const downloadImage = () => {
         :disabled="isLoading || !prompt.trim()"
         class="generate-btn"
       >
-        <span v-if="isLoading" class="btn-content">
-          <span class="spinner"></span>
-          创作中...
-        </span>
-        <span v-else class="btn-content">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
-          </svg>
-          开始创作
-        </span>
+        <span v-if="isLoading" class="spinner"></span>
+        <span v-else>✨ 生成图像</span>
       </button>
-    </div>
-    
-    <Transition name="fade">
+      
       <div v-if="imageUrl || error" class="result-section">
-        <div class="result-header">
-          <h4>{{ error ? '生成失败' : '创作完成' }}</h4>
-          <button @click="clearResult" class="clear-btn">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M18 6L6 18M6 6l12 12"/>
-            </svg>
-          </button>
-        </div>
-        
         <div v-if="error" class="error-message">
-          <span class="error-icon">⚠️</span>
           {{ error }}
         </div>
-        
         <div v-else class="image-result">
           <div class="image-container">
             <img :src="imageUrl" alt="生成的图像" />
             <div class="image-overlay">
-              <div class="overlay-buttons">
-                <a :href="imageUrl" target="_blank" class="overlay-btn">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                    <path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                  </svg>
-                  查看原图
-                </a>
-                <button @click="downloadImage" class="overlay-btn download-btn">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
-                    <polyline points="7 10 12 15 17 10"/>
-                    <line x1="12" y1="15" x2="12" y2="3"/>
-                  </svg>
-                  下载图片
-                </button>
-              </div>
+              <a :href="imageUrl" target="_blank" class="overlay-btn">
+                🔍 查看原图
+              </a>
+              <button @click="downloadImage" class="overlay-btn">
+                ⬇️ 下载图片
+              </button>
             </div>
           </div>
         </div>
+        <button @click="clearResult" class="clear-btn">
+          🗑️ 清除结果
+        </button>
       </div>
-    </Transition>
+    </div>
   </div>
 </template>
 
 <style scoped>
 .generator-wrapper {
-  background: var(--card-bg);
-  backdrop-filter: blur(20px);
-  border: 1px solid var(--card-border);
-  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
   overflow: hidden;
-  box-shadow: var(--shadow-card);
 }
 
 .generator-header {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.3) 0%, rgba(139, 92, 246, 0.3) 100%);
+  padding: 24px;
   display: flex;
   align-items: center;
   gap: 16px;
-  padding: 24px;
-  background: rgba(255, 255, 255, 0.03);
-  border-bottom: 1px solid var(--card-border);
 }
 
 .header-icon {
-  font-size: 2.5em;
+  font-size: 32px;
+  background: rgba(255, 255, 255, 0.2);
   width: 56px;
   height: 56px;
+  border-radius: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--secondary-gradient);
-  border-radius: var(--radius-md);
+  backdrop-filter: blur(10px);
 }
 
 .header-info h3 {
-  font-size: 1.3em;
+  margin: 0;
+  font-size: 1.4rem;
   font-weight: 600;
-  margin-bottom: 4px;
+  color: white;
 }
 
 .header-info p {
-  color: var(--text-muted);
-  font-size: 14px;
+  margin: 4px 0 0 0;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.7);
 }
 
 .generator-body {
@@ -231,164 +203,122 @@ const downloadImage = () => {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 14px;
+  font-size: 1rem;
   font-weight: 500;
-  color: var(--text-secondary);
-  margin-bottom: 10px;
+  color: white;
+  margin-bottom: 12px;
 }
 
 .label-icon {
-  font-size: 1.2em;
+  font-size: 1.2rem;
 }
 
 .prompt-input {
   width: 100%;
-  padding: 16px 20px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid var(--card-border);
-  border-radius: var(--radius-md);
-  color: var(--text-primary);
-  font-size: 15px;
+  padding: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.2);
+  color: white;
+  font-size: 1rem;
   line-height: 1.6;
   resize: vertical;
-  min-height: 120px;
-  transition: var(--transition);
-  font-family: inherit;
+  transition: all 0.3s ease;
 }
 
 .prompt-input:focus {
   outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+  border-color: rgba(99, 102, 241, 0.5);
+  background: rgba(0, 0, 0, 0.3);
 }
 
 .prompt-input::placeholder {
-  color: var(--text-muted);
-}
-
-.prompt-input:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
+  color: rgba(255, 255, 255, 0.4);
 }
 
 .prompt-tips {
-  margin-top: 10px;
+  margin-top: 8px;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
 .tip {
-  font-size: 13px;
-  color: var(--text-muted);
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.05);
+  padding: 6px 12px;
+  border-radius: 20px;
 }
 
 .generate-btn {
   width: 100%;
-  padding: 16px 24px;
-  background: var(--secondary-gradient);
-  border: none;
-  border-radius: var(--radius-md);
+  padding: 16px 32px;
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
   color: white;
-  font-size: 16px;
+  border: none;
+  border-radius: 12px;
+  font-size: 1.1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: var(--transition);
-  box-shadow: 0 4px 15px rgba(240, 147, 251, 0.4);
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
 }
 
 .generate-btn:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(240, 147, 251, 0.6);
+  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
 }
 
 .generate-btn:disabled {
-  opacity: 0.5;
+  opacity: 0.6;
   cursor: not-allowed;
 }
 
-.btn-content {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-}
-
 .spinner {
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 20px;
   border: 2px solid rgba(255, 255, 255, 0.3);
   border-top-color: white;
   border-radius: 50%;
-  animation: spin 0.8s linear infinite;
+  animation: spin 1s linear infinite;
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .result-section {
-  margin: 0 24px 24px;
-  padding: 20px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid var(--card-border);
-  border-radius: var(--radius-md);
-  animation: fadeIn 0.4s ease;
-}
-
-.result-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 16px;
-}
-
-.result-header h4 {
-  font-size: 1em;
-  font-weight: 600;
-}
-
-.clear-btn {
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(255, 255, 255, 0.1);
-  border: none;
-  border-radius: var(--radius-sm);
-  color: var(--text-secondary);
-  cursor: pointer;
-  transition: var(--transition);
-}
-
-.clear-btn:hover {
-  background: rgba(255, 255, 255, 0.2);
-  color: var(--text-primary);
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .error-message {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+  background: rgba(239, 68, 68, 0.2);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #fecaca;
   padding: 16px;
-  background: rgba(239, 68, 68, 0.1);
-  border: 1px solid rgba(239, 68, 68, 0.2);
-  border-radius: var(--radius-md);
-  color: #ef4444;
-}
-
-.error-icon {
-  font-size: 1.2em;
+  border-radius: 12px;
+  text-align: center;
 }
 
 .image-result {
-  border-radius: var(--radius-md);
-  overflow: hidden;
+  margin-bottom: 16px;
 }
 
 .image-container {
   position: relative;
-  background: rgba(0, 0, 0, 0.3);
-  border-radius: var(--radius-md);
+  border-radius: 12px;
   overflow: hidden;
+  background: rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
 .image-container img {
@@ -404,11 +334,15 @@ const downloadImage = () => {
 
 .image-overlay {
   position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.5);
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 12px;
   opacity: 0;
   transition: opacity 0.3s ease;
 }
@@ -417,60 +351,37 @@ const downloadImage = () => {
   opacity: 1;
 }
 
-.overlay-buttons {
-  display: flex;
-  gap: 12px;
-}
-
 .overlay-btn {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 12px 20px;
-  background: white;
-  border: none;
-  border-radius: var(--radius-md);
-  color: #333;
-  font-weight: 500;
-  font-size: 14px;
+  padding: 10px 20px;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
   text-decoration: none;
+  font-size: 0.9rem;
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: all 0.3s ease;
 }
 
 .overlay-btn:hover {
-  transform: scale(1.05);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
 }
 
-.download-btn {
-  background: var(--secondary-gradient);
+.clear-btn {
+  width: 100%;
+  padding: 12px 24px;
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.clear-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
   color: white;
-}
-
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.3s ease, transform 0.3s ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-  transform: translateY(10px);
-}
-
-/* Responsive */
-@media (max-width: 640px) {
-  .generator-header {
-    padding: 20px;
-  }
-  
-  .generator-body {
-    padding: 20px;
-  }
-  
-  .result-section {
-    margin: 0 20px 20px;
-  }
 }
 </style>
