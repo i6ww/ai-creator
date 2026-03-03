@@ -32,8 +32,7 @@ async function handleRequest(request) {
     body: request.body
   });
   
-  // 添加API密钥（这里需要替换为实际的API密钥）
-  clonedRequest.headers.set('Authorization', '123456');
+  // 前端已经设置了Authorization头，这里不需要重复设置
   
   try {
     // 发送请求到目标API
