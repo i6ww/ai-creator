@@ -85,8 +85,8 @@ const generateVideo = async () => {
       }
     }
     
-    // 将Vercel API地址替换为相对路径，以便通过代理访问
-    videoUrl.value = content.replace(/https:\/\/www\.371181668\.xyz/g, 'https://www.371181668.xyz').replace(/https:\/\/grok2api-xings-projects-3a939220\.vercel\.app/g, 'https://www.371181668.xyz');
+    // 将旧API地址替换为新地址
+    videoUrl.value = content.replace(/https:\/\/grok2api-xings-projects-3a939220\.vercel\.app/g, 'https://www.371181668.xyz');
     
     generateHistory.add({
       type: 'video',
@@ -224,7 +224,7 @@ const clearResult = () => {
         </div>
 
         <div v-else class="video-result">
-          <div v-if="videoUrl.includes('http')" class="video-container">
+          <div v-if="videoUrl.startsWith('http') && !videoUrl.includes('<')" class="video-container">
             <video :src="videoUrl" controls class="generated-video"></video>
           </div>
           <div v-else class="video-html" v-html="videoUrl"></div>
