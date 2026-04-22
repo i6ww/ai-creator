@@ -12,76 +12,62 @@ function getCorsHeaders(request) {
   };
 }
 
-addEventListener('fetch', event => {
-  event.respondWith(handleRequest(event.request));
-});
+export default {
+  async fetch(request, env, ctx) {
+    const url = new URL(request.url);
+    const path = url.pathname;
+    const corsHeaders = getCorsHeaders(request);
 
-async function handleRequest(request) {
-  const url = new URL(request.url);
-  const path = url.pathname;
-  const corsHeaders = getCorsHeaders(request);
-  
-  // 处理CORS预检请求
-  if (request.method === 'OPTIONS') {
-    return new Response(null, {
-      headers: corsHeaders
+    if (request.method === 'OPTIONS') {
+      return new Response(null, { headers: corsHeaders });
+    }
+
+    if (path.startsWith('/generated/')) {
+      const targetUrl = `http://43.165.172.5:6001${path}`;
+      try {
+        const response = await fetch(targetUrl);
+        const newHeaders = new Headers(response.headers);
+        Object.entries(corsHeaders).forEach(([key, value]) => {
+          newHeaders.set(key, value);
+        });
+        return new Response(response.body, {
+          status: response.status,
+          statusText: response.statusText,
+          headers: newHeaders
+        });
+      } catch (error) {
+        return new Response('Image not found', { status: 404 });
+      }
+    }
+
+    if (request.method !== 'POST' && request.method !== 'GET') {
+      return new Response('Method not allowed', { status: 405 });
+    }
+
+    const targetUrl = `https://www.371181668.xyz${path}`;
+
+    const headers = new Headers(request.headers);
+
+    const fetchRequest = new Request(targetUrl, {
+      method: request.method,
+      headers: headers,
+      body: request.body,
+      redirect: 'follow'
     });
-  }
-  
-  // 处理 /generated/ 路径的图片请求
-  if (path.startsWith('/generated/')) {
-    const targetUrl = `http://43.165.172.5:6001${path}`;
+
     try {
-      const response = await fetch(targetUrl);
-      const clonedResponse = new Response(response.body, {
+      const response = await fetch(fetchRequest);
+      const newHeaders = new Headers(response.headers);
+      Object.entries(corsHeaders).forEach(([key, value]) => {
+        newHeaders.set(key, value);
+      });
+      return new Response(response.body, {
         status: response.status,
         statusText: response.statusText,
-        headers: new Headers(response.headers)
+        headers: newHeaders
       });
-      Object.entries(corsHeaders).forEach(([key, value]) => {
-        clonedResponse.headers.set(key, value);
-      });
-      return clonedResponse;
     } catch (error) {
-      return new Response('Image not found', { status: 404 });
+      return new Response('Internal server error: ' + error.message, { status: 500 });
     }
   }
-  
-  // 只处理POST请求
-  if (request.method !== 'POST') {
-    return new Response('Method not allowed', { status: 405 });
-  }
-  
-  // 构建目标URL
-  const targetUrl = `https://www.371181668.xyz${path}`;
-  
-  // 克隆请求
-  const clonedRequest = new Request(targetUrl, {
-    method: request.method,
-    headers: new Headers(request.headers),
-    body: request.body
-  });
-  
-  // 前端已经设置了Authorization头，这里不需要重复设置
-  
-  try {
-    // 发送请求到目标API
-    const response = await fetch(clonedRequest);
-    
-    // 克隆响应
-    const clonedResponse = new Response(response.body, {
-      status: response.status,
-      statusText: response.statusText,
-      headers: new Headers(response.headers)
-    });
-    
-    // 添加CORS响应头
-    Object.entries(corsHeaders).forEach(([key, value]) => {
-      clonedResponse.headers.set(key, value);
-    });
-    
-    return clonedResponse;
-  } catch (error) {
-    return new Response('Internal server error', { status: 500 });
-  }
-}
+};
