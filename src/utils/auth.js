@@ -1,4 +1,7 @@
 const STORAGE_KEY = 'user';
+const USER_ID_KEY = 'new_api_user_id';
+const TOKEN_KEY = 'access_token';
+const TOKENS_LIST_KEY = 'tokens_list';
 
 export const getUser = () => {
   try {
@@ -18,9 +21,27 @@ export const setUser = (user) => {
   }
 };
 
+export const setNewApiUserId = (userId) => {
+  try {
+    localStorage.setItem(USER_ID_KEY, String(userId));
+  } catch (error) {
+    console.error('保存用户 ID 失败:', error);
+  }
+};
+
+export const getNewApiUserId = () => {
+  try {
+    return localStorage.getItem(USER_ID_KEY) || '';
+  } catch (error) {
+    console.error('获取用户 ID 失败:', error);
+    return '';
+  }
+};
+
 export const clearUser = () => {
   try {
     localStorage.removeItem(STORAGE_KEY);
+    localStorage.removeItem(USER_ID_KEY);
   } catch (error) {
     console.error('清除用户信息失败:', error);
   }
@@ -28,6 +49,68 @@ export const clearUser = () => {
 
 export const isLoggedIn = () => {
   return !!getUser();
+};
+
+export const setAccessToken = (token) => {
+  try {
+    localStorage.setItem(TOKEN_KEY, token);
+  } catch (error) {
+    console.error('保存 accessToken 失败:', error);
+  }
+};
+
+export const getAccessToken = () => {
+  try {
+    return localStorage.getItem(TOKEN_KEY) || '';
+  } catch (error) {
+    console.error('获取 accessToken 失败:', error);
+    return '';
+  }
+};
+
+export const clearAccessToken = () => {
+  try {
+    localStorage.removeItem(TOKEN_KEY);
+  } catch (error) {
+    console.error('清除 accessToken 失败:', error);
+  }
+};
+
+export const setTokensList = (tokens) => {
+  try {
+    localStorage.setItem(TOKENS_LIST_KEY, JSON.stringify(tokens));
+  } catch (error) {
+    console.error('保存令牌列表失败:', error);
+  }
+};
+
+export const getTokensList = () => {
+  try {
+    const tokensStr = localStorage.getItem(TOKENS_LIST_KEY);
+    return tokensStr ? JSON.parse(tokensStr) : [];
+  } catch (error) {
+    console.error('获取令牌列表失败:', error);
+    return [];
+  }
+};
+
+export const clearTokensList = () => {
+  try {
+    localStorage.removeItem(TOKENS_LIST_KEY);
+  } catch (error) {
+    console.error('清除令牌列表失败:', error);
+  }
+};
+
+export const clearAllAuth = () => {
+  clearUser();
+  clearAccessToken();
+  clearTokensList();
+  try {
+    localStorage.removeItem('api_key');
+  } catch (error) {
+    console.error('清除 api_key 失败:', error);
+  }
 };
 
 export const generateHistory = {

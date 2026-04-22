@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue';
-import { getUser, clearUser } from '../utils/auth';
+import { getUser, clearAllAuth } from '../utils/auth';
 
 const emit = defineEmits(['login', 'openAuth', 'openHistory']);
 
@@ -12,7 +12,7 @@ const handleLogin = () => {
 };
 
 const handleLogout = () => {
-  clearUser();
+  clearAllAuth();
   emit('login', null);
   showMenu.value = false;
 };
@@ -22,24 +22,27 @@ const handleHistory = () => {
   showMenu.value = false;
 };
 
-const toggleMenu = () => {
-  showMenu.value = !showMenu.value;
+const handleOpenAuth = () => {
+  emit('openAuth');
+  showMenu.value = false;
 };
 
-const handleClickOutside = () => {
-  showMenu.value = false;
+const toggleMenu = () => {
+  showMenu.value = !showMenu.value;
 };
 </script>
 
 <template>
-  <div class="user-menu" v-click-outside="handleClickOutside">
-    <button v-if="!user" class="login-btn" @click="handleLogin">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-        <circle cx="12" cy="7" r="4"/>
-      </svg>
-      <span>登录</span>
-    </button>
+  <div class="user-menu">
+    <div v-if="!user" class="guest-actions">
+      <button class="login-btn" @click="handleLogin">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+          <circle cx="12" cy="7" r="4"/>
+        </svg>
+        <span>登录</span>
+      </button>
+    </div>
     
     <div v-else class="user-dropdown">
       <button class="user-btn" @click="toggleMenu">
@@ -56,7 +59,6 @@ const handleClickOutside = () => {
             <div class="dropdown-avatar">{{ user.avatar }}</div>
             <div class="dropdown-info">
               <div class="dropdown-name">{{ user.username }}</div>
-              <div class="dropdown-email">{{ user.email || '未设置邮箱' }}</div>
             </div>
           </div>
           
@@ -68,12 +70,11 @@ const handleClickOutside = () => {
               <span>历史记录</span>
             </button>
             
-            <button class="dropdown-item">
+            <button class="dropdown-item" @click="handleOpenAuth">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="3"/>
-                <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/>
+                <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/>
               </svg>
-              <span>设置</span>
+              <span>令牌管理</span>
             </button>
             
             <div class="dropdown-divider"></div>
@@ -96,6 +97,12 @@ const handleClickOutside = () => {
 <style scoped>
 .user-menu {
   position: relative;
+}
+
+.guest-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .login-btn {
@@ -173,7 +180,7 @@ const handleClickOutside = () => {
   position: absolute;
   top: calc(100% + 10px);
   right: 0;
-  width: 280px;
+  width: 240px;
   background: rgba(30, 30, 40, 0.95);
   backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -214,14 +221,6 @@ const handleClickOutside = () => {
   font-size: 16px;
   font-weight: 600;
   margin-bottom: 4px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.dropdown-email {
-  color: rgba(255, 255, 255, 0.6);
-  font-size: 13px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;

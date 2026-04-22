@@ -11,10 +11,27 @@ async function handleRequest(request) {
     return new Response(null, {
       headers: {
         'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'POST, OPTIONS',
+        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
         'Access-Control-Allow-Headers': 'Content-Type, Authorization'
       }
     });
+  }
+  
+  // 处理 /generated/ 路径的图片请求
+  if (path.startsWith('/generated/')) {
+    const targetUrl = `http://43.165.172.5:6001${path}`;
+    try {
+      const response = await fetch(targetUrl);
+      const clonedResponse = new Response(response.body, {
+        status: response.status,
+        statusText: response.statusText,
+        headers: new Headers(response.headers)
+      });
+      clonedResponse.headers.set('Access-Control-Allow-Origin', '*');
+      return clonedResponse;
+    } catch (error) {
+      return new Response('Image not found', { status: 404 });
+    }
   }
   
   // 只处理POST请求

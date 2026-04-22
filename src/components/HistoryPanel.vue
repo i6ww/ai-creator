@@ -13,9 +13,7 @@ const openAuth = inject('openAuth');
 
 const filters = [
   { id: 'all', label: '全部', icon: '📋' },
-  { id: 'chat', label: '对话', icon: '💬' },
-  { id: 'image', label: '图像', icon: '🎨' },
-  { id: 'video', label: '视频', icon: '🎬' }
+  { id: 'image', label: '图像', icon: '🎨' }
 ];
 
 onMounted(() => {
@@ -101,9 +99,7 @@ const formatDate = (timestamp) => {
             class="history-item"
           >
             <div class="item-header">
-              <span class="item-type">
-                {{ item.type === 'chat' ? '💬' : item.type === 'image' ? '🎨' : '🎬' }}
-              </span>
+              <span class="item-type">🎨</span>
               <span class="item-time">{{ formatDate(item.timestamp) }}</span>
             </div>
             
@@ -112,10 +108,6 @@ const formatDate = (timestamp) => {
               
               <div v-if="item.type === 'image' && item.url" class="item-preview">
                 <img :src="item.url" :alt="item.prompt" />
-              </div>
-              
-              <div v-if="item.type === 'video' && item.url" class="item-preview">
-                <video :src="item.url" controls />
               </div>
             </div>
             
@@ -302,8 +294,7 @@ const formatDate = (timestamp) => {
   background: rgba(0, 0, 0, 0.3);
 }
 
-.item-preview img,
-.item-preview video {
+.item-preview img {
   width: 100%;
   height: 200px;
   object-fit: cover;
