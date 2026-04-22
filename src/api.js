@@ -2,7 +2,7 @@ import axios from 'axios';
 import { getNewApiUserId, getAccessToken } from './utils/auth';
 
 const isDev = import.meta.env.DEV;
-const API_BASE_URL = isDev ? '' : 'https://ai-creator.i6ww.workers.dev';
+const API_BASE_URL = isDev ? '' : 'https://xycm.site';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
