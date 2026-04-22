@@ -1,16 +1,15 @@
 const ALLOWED_ORIGINS = ['https://xycm.site', 'https://ai-creator.i6ww.workers.dev'];
 
 function getCorsHeaders(request) {
-  const origin = request.headers.get('Origin');
-  if (ALLOWED_ORIGINS.includes(origin)) {
-    return {
-      'Access-Control-Allow-Origin': origin,
-      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-      'Access-Control-Allow-Credentials': 'true'
-    };
-  }
-  return {};
+  const origin = request.headers.get('Origin') || '';
+  const allowedOrigin = ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
+  return {
+    'Access-Control-Allow-Origin': allowedOrigin,
+    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    'Access-Control-Allow-Credentials': 'true',
+    'Access-Control-Max-Age': '86400'
+  };
 }
 
 addEventListener('fetch', event => {
