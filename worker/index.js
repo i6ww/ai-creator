@@ -1,3 +1,18 @@
+const ALLOWED_ORIGINS = ['https://xycm.site', 'https://ai-creator.i6ww.workers.dev'];
+
+function getCorsHeaders(request) {
+  const origin = request.headers.get('Origin');
+  if (ALLOWED_ORIGINS.includes(origin)) {
+    return {
+      'Access-Control-Allow-Origin': origin,
+      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+      'Access-Control-Allow-Credentials': 'true'
+    };
+  }
+  return {};
+}
+
 addEventListener('fetch', event => {
   event.respondWith(handleRequest(event.request));
 });
@@ -5,15 +20,12 @@ addEventListener('fetch', event => {
 async function handleRequest(request) {
   const url = new URL(request.url);
   const path = url.pathname;
+  const corsHeaders = getCorsHeaders(request);
   
   // 处理CORS预检请求
   if (request.method === 'OPTIONS') {
     return new Response(null, {
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type, Authorization'
-      }
+      headers: corsHeaders
     });
   }
   
@@ -27,7 +39,9 @@ async function handleRequest(request) {
         statusText: response.statusText,
         headers: new Headers(response.headers)
       });
-      clonedResponse.headers.set('Access-Control-Allow-Origin', '*');
+      Object.entries(corsHeaders).forEach(([key, value]) => {
+        clonedResponse.headers.set(key, value);
+      });
       return clonedResponse;
     } catch (error) {
       return new Response('Image not found', { status: 404 });
@@ -63,7 +77,9 @@ async function handleRequest(request) {
     });
     
     // 添加CORS响应头
-    clonedResponse.headers.set('Access-Control-Allow-Origin', '*');
+    Object.entries(corsHeaders).forEach(([key, value]) => {
+      clonedResponse.headers.set(key, value);
+    });
     
     return clonedResponse;
   } catch (error) {
